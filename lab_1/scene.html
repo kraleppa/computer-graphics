@@ -142,8 +142,8 @@
             }
 
 
-            let carMovementValue = 0.05;
-            let treeMovementValue = 0.05;
+            let carMovementValue = 0.09;
+            let treeMovementValue = 0.01;
             const scene = initializeScene(); 
             const camera = initializeCamera(scene)
             initializeGround(scene)
@@ -166,10 +166,10 @@
                 }
 
                 if (tree1[0].position.y <= 0.5){
-                    treeMovementValue = (3 - tree1[0].position.y) * 0.04
+                    treeMovementValue = 0.09
                 }
                 if (tree1[0].position.y >= 2){
-                    treeMovementValue = (tree1[0].position.y - 3) * 0.05
+                    treeMovementValue = -0.07
                 }
 
                 treeList.forEach(tree => tree.forEach(element => element.position.y += treeMovementValue))
