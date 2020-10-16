@@ -135,8 +135,10 @@
                 let tire4 = new THREE.Mesh( tireGeometry, tireMaterial );
                 tire4.position.set(1.3, 0.6, -1.05)
                 scene.add( tire4 );
+
+                return [car, tire1, tire2, tire3, tire4]
             }
-            
+            let movementValue = 0.1;
             const scene = initializeScene(); 
             const camera = initializeCamera(scene)
             initializeGround(scene)
@@ -145,10 +147,18 @@
             initializeTree(scene, 3, 10, 10)
             initializeTree(scene, 4, 0, 13)
             initializeHome(scene)
-            initializeCar(scene)
+            let carElementsList = initializeCar(scene)
             animateScene(); 
+            
 
             function animateScene(){ 
+                if (carElementsList[0].position.x <= -10){
+                    movementValue = 0.1
+                } 
+                if (carElementsList[0].position.x >= 10){
+                    movementValue = -0.1
+                }
+                carElementsList.forEach(element => element.position.x += movementValue)
                 requestAnimationFrame(animateScene); 
                 renderScene(); 
             } 
