@@ -38,24 +38,55 @@
 
             function initializeCamera(scene) {
                 let camera = new THREE.PerspectiveCamera(45, canvasWidth / canvasHeight, 1, 100); 
-                camera.position.set(0, 0, 10); 
+                camera.position.set(30, 15, 10); 
                 camera.lookAt(scene.position); 
                 scene.add(camera); 
                 return camera
             }
 
-            function initializeCube(scene) { 
-                var cubeGeometry = new THREE.CubeGeometry(1.5, 1.5, 1.5); 
-                var cubeMaterial = new THREE.MeshFaceMaterial(new THREE.MeshBasicMaterial({color:0xFF0000})); 
+            function initializeGround(scene) { 
+                let groundGeometry = new THREE.BoxGeometry(30, 0.1, 30); 
+                let groundMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x00b000,
+                    side: THREE.DoubleSide
+                }); 
 
-                let cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial); 
-                cubeMesh.position.set(1.5, 0.0, 4.0); 
-                scene.add(cubeMesh); 
-                return cubeMesh
+                let groundMesh = new THREE.Mesh(groundGeometry, groundMaterial)
+                groundMesh.position.set(0, 0, 0)
+
+                scene.add(groundMesh); 
             } 
 
+            function initializeTree(scene, segments, x, z) {
+                let treeGeometry = new THREE.ConeGeometry( 1, 2, 32 );
+                let treeMaterial = new THREE.MeshBasicMaterial( {color: 0x004000} );
+
+                let trunkGeometry = new THREE.CylinderGeometry( 0.3, 0.3, 1, 32 );
+                let trunkMaterial = new THREE.MeshBasicMaterial( {color: 0x854513} );
+
+                trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+                trunk.position.set(x, 0.5, z)
+                scene.add(trunk)
+
+                
+
+                for (let i = 0; i < segments; i++){
+                    tree = new THREE.Mesh( treeGeometry, treeMaterial );
+                    tree.position.set(x, (2 + i), z)
+                    scene.add( tree );
+                }
+            }
+            
+            const scene = initializeScene(); 
+            const camera = initializeCamera(scene)
+            initializeGround(scene)
+            initializeTree(scene, 3, -10, 7)
+            initializeTree(scene, 3, 10, -8)
+            initializeTree(scene, 3, 10, 10)
+            initializeTree(scene, 4, 0, 13)
+            animateScene(); 
+
             function animateScene(){ 
-                cubeMesh.rotateOnAxis(new THREE.Vector3(1, 1, 1).normalize(), 0.075); 
                 requestAnimationFrame(animateScene); 
                 renderScene(); 
             } 
@@ -63,13 +94,6 @@
             function renderScene(){ 
                 renderer.render(scene, camera); 
             } 
-            
-            const scene = initializeScene(); 
-            const camera = initializeCamera(scene)
-            const cubeMesh = initializeCube(scene)
-            animateScene(); 
-
-
         </script> 
     </body> 
 </html>
