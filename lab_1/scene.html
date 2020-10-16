@@ -69,12 +69,14 @@
                 scene.add(trunk)
 
                 
-
+                let segmentList = [trunk]
                 for (let i = 0; i < segments; i++){
                     tree = new THREE.Mesh( treeGeometry, treeMaterial );
                     tree.position.set(x, (2 + i), z)
                     scene.add( tree );
+                    segmentList.push(tree)
                 }
+                return segmentList
             }
 
             function initializeHome(scene){
@@ -138,14 +140,18 @@
 
                 return [car, tire1, tire2, tire3, tire4]
             }
-            let movementValue = 0.1;
+
+
+            let carMovementValue = 0.05;
+            let treeMovementValue = 0.05;
             const scene = initializeScene(); 
             const camera = initializeCamera(scene)
             initializeGround(scene)
-            initializeTree(scene, 3, -10, 7)
-            initializeTree(scene, 3, 10, -8)
-            initializeTree(scene, 3, 10, 10)
-            initializeTree(scene, 4, 0, 13)
+            let tree1 = initializeTree(scene, 3, -10, 7)
+            let tree2 = initializeTree(scene, 3, 10, -8)
+            let tree3 = initializeTree(scene, 3, 10, 10)
+            let tree4 = initializeTree(scene, 4, 0, 13)
+            treeList = [tree1, tree2, tree3, tree4]
             initializeHome(scene)
             let carElementsList = initializeCar(scene)
             animateScene(); 
@@ -153,12 +159,23 @@
 
             function animateScene(){ 
                 if (carElementsList[0].position.x <= -10){
-                    movementValue = 0.1
+                    carMovementValue = 0.1
                 } 
                 if (carElementsList[0].position.x >= 10){
-                    movementValue = -0.1
+                    carMovementValue = -0.1
                 }
-                carElementsList.forEach(element => element.position.x += movementValue)
+
+                if (tree1[0].position.y <= 0.5){
+                    treeMovementValue = (3 - tree1[0].position.y) * 0.04
+                }
+                if (tree1[0].position.y >= 2){
+                    treeMovementValue = (tree1[0].position.y - 3) * 0.05
+                }
+
+                treeList.forEach(tree => tree.forEach(element => element.position.y += treeMovementValue))
+
+
+                carElementsList.forEach(element => element.position.x += carMovementValue)
                 requestAnimationFrame(animateScene); 
                 renderScene(); 
             } 
